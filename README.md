@@ -1,6 +1,6 @@
 # US Financials
 
-Проект предсказания успешности котировки акции относительно индекса рынка
+Проект предсказания успешности котировки акции эмитента из США относительно индекса рынка - S&P500
 
 Ноутбуки:
 - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/DmitriyKhodykin/USFinancials/blob/main/data_cleaning.ipynb) data_cleaning - получение датасетов из сырых данных JSON, предобработка
