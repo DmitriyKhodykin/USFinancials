@@ -153,3 +153,4 @@ auth/
 
 # Data
 data/*.zip
+data/*/*
