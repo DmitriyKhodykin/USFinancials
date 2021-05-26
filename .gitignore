@@ -153,4 +153,6 @@ auth/
 
 # Data
 data/*.zip
+data/*.parquet
+data/*.csv
 data/*/*
