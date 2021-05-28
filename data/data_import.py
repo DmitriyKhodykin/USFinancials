@@ -59,7 +59,7 @@ def _get_stock_quotes() -> None:
     lost_tickers = []  # Not found through the Yahoo Finance service
     stock_quotes_dataframe = pd.DataFrame()
 
-    for ticker in unique_tickers_list[:10]:
+    for ticker in unique_tickers_list:
         try:
             tmp_dataframe = si.get_data(ticker)[['adjclose', 'ticker']]  # Request
             stock_quotes_dataframe = stock_quotes_dataframe.append(tmp_dataframe)
