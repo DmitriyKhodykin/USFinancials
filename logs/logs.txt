@@ -1,0 +1,1 @@
+func open_reports args: ('Balance_Sheet_report', 'Cash_Flow_report', 'Income_Statement_report'), elapsed time: 0:01:19.350970

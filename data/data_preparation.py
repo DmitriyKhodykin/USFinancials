@@ -6,7 +6,10 @@ import os
 import zipfile
 import pandas as pd
 
+from services.utils import timeit
 
+
+@timeit
 def unpack_data(data_dir='US_Financials') -> None:
     """
     Unpacks a data source archive and save links to files in parquet.
@@ -26,6 +29,7 @@ def unpack_data(data_dir='US_Financials') -> None:
     data.to_parquet('links.parquet')
 
 
+@timeit
 def create_financial_datasets(links: pd.DataFrame, branch: str) -> None:
     """
     Create and save data sets with financials indicators.
@@ -50,7 +54,7 @@ def create_financial_datasets(links: pd.DataFrame, branch: str) -> None:
             sheet['filing_date'] = pd.to_datetime(sheet['filing_date'])
             sheet['date'] = pd.to_datetime(sheet['date'])
             dataset = dataset.append(sheet)
-        except (KeyError, UnicodeDecodeError):
+        except (KeyError, UnicodeDecodeError, json.decoder.JSONDecodeError):
             pass
 
     dataset.to_parquet(f'{branch}_report.parquet')
