@@ -1,21 +1,29 @@
 import pandas as pd
 
 from services.utils import timeit
+from settings import params
+
+
+# Globals
+DATA_DIRECTORY = params.DATA_DIRECTORY
 
 
 @timeit
-def open_reports(rep1, rep2, rep3):
-    bs_dataset = pd.read_parquet(f'{data_directory}/{rep1}.parquet')
-    print('Balance_Sheet', len(bs_dataset), 'str')
-    print(bs_dataset.head())
-
-    cf_dataset = pd.read_parquet(f'{data_directory}/{rep2}.parquet')
-    print('Cash_Flow', len(cf_dataset), 'str')
-    print(cf_dataset.head())
-
-    is_dataset = pd.read_parquet(f'{data_directory}/{rep3}.parquet')
-    print('Income_Statement', len(is_dataset), 'str')
-    print(is_dataset.head())
+def open_reports(*args) -> pd.DataFrame:
+    """
+    Opens the required reports from the local storage.
+    :param args: Names of reports
+    :return: Pandas data frames
+    """
+    report = pd.DataFrame()
+    for report_name in args:
+        try:
+            report = pd.read_parquet(f'{DATA_DIRECTORY}/{report_name}.parquet')
+            print(f'Report {report_name} opened, count: {len(report)}')
+            return report
+        except KeyError:
+            print(f'error: File {report_name} not found')
+    return report
 
 
 open_reports('Balance_Sheet_report', 'Cash_Flow_report', 'Income_Statement_report')
