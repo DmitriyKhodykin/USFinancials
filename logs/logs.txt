@@ -1,3 +1,4 @@
 func _import_index_500 args: (), elapsed time: 0:00:02.906157 
 func _get_unique_tickers_list args: (), elapsed time: 0:05:14.339267 
 func _get_stock_quotes args: (), elapsed time: 0:05:44.237571 
+func _get_unique_tickers_list args: (), elapsed time: 0:05:44.129900 

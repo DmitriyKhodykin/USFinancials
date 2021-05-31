@@ -156,3 +156,7 @@ data/*.zip
 data/*.parquet
 data/*.csv
 data/*/*
+
+
+# Logs
+logs/

@@ -64,7 +64,7 @@ def _get_stock_quotes() -> None:
             tmp_dataframe = si.get_data(ticker)[['adjclose', 'ticker']]  # Request
             stock_quotes_dataframe = stock_quotes_dataframe.append(tmp_dataframe)
             time.sleep(2)
-        except KeyError:
+        except (KeyError, AssertionError):
             lost_tickers.append(ticker)
 
     stock_quotes_dataframe.to_parquet('Stock_Quotes_Dataframe.parquet')
