@@ -4,11 +4,13 @@ Features Engineering module.
 import pandas
 
 from settings import params
+from services.utils import timeit
 
 # Globals
 DATA_DIRECTORY = params.RAW_DATA_DIRECTORY
 
 
+@timeit
 def _features_engineering(data: pandas.DataFrame) -> None:
     """
     Engineering new features for main dataframe.
