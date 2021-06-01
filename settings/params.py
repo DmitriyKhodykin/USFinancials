@@ -1,3 +1,7 @@
+"""
+Params for project setting.
+"""
+
 import os
 
 # Data
