@@ -77,7 +77,9 @@ def _not_null_tickers_checker(report: pd.DataFrame) -> list:
 
     for ticker in unique_ticker_list:
         tmp_data_frame = report[report['ticker'] == ticker]
-        if type(tmp_data_frame['filing_date'].max()) == pd._libs.tslibs.timestamps.Timestamp:
+        date_instance = tmp_data_frame['filing_date'].max()
+
+        if isinstance(date_instance, pd.Timestamp):
             not_null_tickers.append(ticker)
 
     return not_null_tickers
@@ -86,4 +88,3 @@ def _not_null_tickers_checker(report: pd.DataFrame) -> list:
 if __name__ == '__main__':
     _get_unique_tickers_list()
     _import_stock_quotes()
-
