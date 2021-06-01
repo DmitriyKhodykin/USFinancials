@@ -5,7 +5,7 @@ from settings import params
 
 
 # Globals
-DATA_DIRECTORY = params.DATA_DIRECTORY
+DATA_DIRECTORY = params.RAW_DATA_DIRECTORY
 
 
 @timeit

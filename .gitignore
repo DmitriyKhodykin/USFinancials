@@ -157,6 +157,11 @@ data/*.parquet
 data/*.csv
 data/*/*
 
+features/*.zip
+features/*.parquet
+features/*.csv
+features/*/*
+
 
 # Logs
 logs/
