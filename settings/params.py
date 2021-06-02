@@ -11,6 +11,7 @@ FEATURES_DATA_DIRECTORY = os.path.abspath('../features')
 # Models
 RANDOM_SEED = 42
 TEST_SIZE = 0.2
+TIME_SLICE = 365
 
 # Logs
 LOGS_DIRECTORY = os.path.abspath('../logs')

@@ -9,7 +9,7 @@ class CleaningData:
     def __init__(self, dataframe: pandas.DataFrame):
         self.dataframe = dataframe
 
-    def cols_to_datetime(self, cols: list):
+    def cols_to_datetime(self, cols: list) -> pandas.DataFrame:
         """
         Transforming objects of dataframes to datetime.
         :param cols: List of objects cols
