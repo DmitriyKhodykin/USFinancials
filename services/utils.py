@@ -1,8 +1,9 @@
 """
 Utils for optimization and task evaluation.
 """
-import os
 from datetime import datetime
+
+from settings import params
 
 
 def timeit(func):
@@ -10,7 +11,7 @@ def timeit(func):
     Counts the time taken to execute the wrapped function.
     :return: func, elapsed time
     """
-    logs_directory = os.path.abspath('../logs')
+    logs_directory = params.LOGS_DIRECTORY
 
     def wrapper(*args, **kwargs):
         start = datetime.now()
