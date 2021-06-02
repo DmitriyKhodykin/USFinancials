@@ -10,17 +10,26 @@ from services.utils import timeit
 DATA_DIRECTORY = params.RAW_DATA_DIRECTORY
 
 
-@timeit
-def _features_engineering(data: pandas.DataFrame) -> None:
+class FeaturesEngineering:
     """
     Engineering new features for main dataframe.
     :param data: Cleaned dataframe
     :return: None
     """
-    data = data.copy()
-    # Some transformations
-    data.to_parquet('data.parquet')
+    def __init__(self, data: pandas.DataFrame):
+        self.data = data
+
+    @timeit
+    def transformations(self):
+        pass
+        # Some transformations
+
+    @timeit
+    def save_data(self):
+        self.data.to_parquet('data.parquet')
 
 
 if __name__ == '__main__':
-    _features_engineering(pandas.read_parquet(f'{DATA_DIRECTORY}/data.parquet'))
+    fe = FeaturesEngineering(pandas.read_parquet(f'{DATA_DIRECTORY}/data.parquet'))
+    fe.transformations()
+    fe.save_data()
