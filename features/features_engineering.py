@@ -1,13 +1,10 @@
 """
-Features Engineering module.
+Features Engineering module for main dataframe.
 """
 import pandas
 
-from settings import params
+from settings.params import reports
 from services.utils import timeit
-
-# Globals
-DATA_DIRECTORY = params.RAW_DATA_DIRECTORY
 
 
 class FeaturesEngineering:
@@ -16,8 +13,8 @@ class FeaturesEngineering:
     :param data: Cleaned dataframe
     :return: None
     """
-    def __init__(self, data: pandas.DataFrame):
-        self.data = data
+    def __init__(self, dataframe: pandas.DataFrame):
+        self.dataframe = dataframe
 
     @timeit
     def transformations(self):
@@ -26,10 +23,10 @@ class FeaturesEngineering:
 
     @timeit
     def save_data(self):
-        self.data.to_parquet('data.parquet')
+        self.dataframe.to_parquet('data.parquet')
 
 
 if __name__ == '__main__':
-    fe = FeaturesEngineering(pandas.read_parquet(f'{DATA_DIRECTORY}/data.parquet'))
+    fe = FeaturesEngineering(pandas.read_parquet(reports['RawData']))
     fe.transformations()
     fe.save_data()

@@ -2,10 +2,9 @@ from unittest import TestCase
 
 import pandas
 
-from settings import params
+from settings.params import reports
 
-dir = params.RAW_DATA_DIRECTORY
-
-
-df = pandas.read_parquet(f'{dir}/Balance_Sheet_Report.parquet')
+df = pandas.read_parquet(reports['RawData'])
 print(df)
+
+

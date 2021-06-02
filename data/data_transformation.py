@@ -1,48 +1,34 @@
-import pandas as pd
+"""
+Module for transformation raw data from some sources to joined `main` dataframe.
+"""
+import pandas
 
 from services.utils import timeit
-from settings import params
-
-
-# Globals
-DATA_DIRECTORY = params.RAW_DATA_DIRECTORY
+from settings.params import reports
 
 
 @timeit
-def _opening_reports(*args) -> pd.DataFrame:
+def _joining_reports():
     """
-    Opens the required reports from the local storage.
-    :param args: Names of reports
-    :return: Pandas data frames
+    Create joined financial dataframe from several financials reports.
     """
-    report = pd.DataFrame()
-    for report_name in args:
-        try:
-            report = pd.read_parquet(f'{DATA_DIRECTORY}/{report_name}.parquet')
-            print(f'Report {report_name} opened, count: {len(report)}')
-            return report
-        except KeyError:
-            print(f'error: File {report_name} not found')
-    return report
+    # Opening reports
+    balance = pandas.read_parquet(reports['BalanceSheet'])
+    cash = pandas.read_parquet(reports['CashFlow'])
+    income = pandas.read_parquet(reports['IncomeStatement'])
 
+    # Creates key for merging reports
+    balance['key'] = balance['date'].astype(str) + balance['ticker'].astype(str)
+    cash['key'] = cash['date'].astype(str) + cash['ticker'].astype(str)
+    income['key'] = income['date'].astype(str) + income['ticker'].astype(str)
 
-@timeit
-def _concatenate_dataframes(name_1: str, name_2: str):
-    """
-    Concatenate dataframes from Yahoo Finance.
-    :param name_1: Dataframe 1 name
-    :param name_2: Dataframe 2 name
-    :return: Concatenated dataframe
-    """
-    concatenated_dataframe = pd.DataFrame()
-    try:
-        dataframe_1 = pd.read_parquet(f'{DATA_DIRECTORY}/{name_1}.parquet')
-        dataframe_2 = pd.read_parquet(f'{DATA_DIRECTORY}/{name_2}.parquet')
-        concatenated_dataframe = concatenated_dataframe.append(dataframe_1)
-        concatenated_dataframe = concatenated_dataframe.append(dataframe_2)
-    except FileNotFoundError:
-        print('error: File not found')
-    return concatenated_dataframe
+    # Merging reports on created key
+    dataframe = income.merge(
+        balance, how='inner', on='key'
+    ).merge(
+        cash, how='inner', on='key'
+    )
+    dataframe.to_parquet('data.parquet')
 
 
 @timeit
@@ -54,7 +40,7 @@ def _percentage_change(index: str, stock: str) -> None:
     :return: dataframe without market noise
     """
     dataframe = _concatenate_dataframes(index, stock)
-    relative_dataframe = pd.DataFrame()
+    relative_dataframe = pandas.DataFrame()
     try:
         dataframe = dataframe.copy()
         reshaped_dataframe = dataframe.pivot(columns='ticker', values='adjclose')
@@ -66,22 +52,30 @@ def _percentage_change(index: str, stock: str) -> None:
     relative_dataframe.to_parquet('Stock_Quotes_Relative.parquet')
 
 
+def _concatenate_dataframes(name_1: str, name_2: str):
+    """
+    Concatenate dataframes from Yahoo Finance.
+    :param name_1: Dataframe 1 name
+    :param name_2: Dataframe 2 name
+    :return: Concatenated dataframe
+    """
+    concatenated_dataframe = pandas.DataFrame()
+    try:
+        dataframe_1 = pandas.read_parquet(reports[name_1])
+        dataframe_2 = pandas.read_parquet(reports[name_2])
+        concatenated_dataframe = concatenated_dataframe.append(dataframe_1)
+        concatenated_dataframe = concatenated_dataframe.append(dataframe_2)
+    except FileNotFoundError:
+        print('error: File not found')
+    return concatenated_dataframe
+
+
 @timeit
 def _creating_target():
     pass
 
 
-@timeit
-def _joining_reports() -> pd.DataFrame:
-
-    balance, cash, income, index_sp, stock = _opening_reports('Balance_Sheet_report', 'Cash_Flow_report',
-                                                              'Income_Statement_report', 'Index_500',
-                                                              'Stock_Quotes_Dataframe')
-    relative_stock = _percentage_change()
-
-    data = pd.DataFrame()
-    return data
-
-
 if __name__ == '__main__':
-    _percentage_change('Index_500', 'Stock_Quotes_Dataframe')
+    pass
+    # _percentage_change('SP500', 'Stock')
+    _joining_reports()

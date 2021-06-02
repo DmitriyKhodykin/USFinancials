@@ -3,3 +3,8 @@ func _get_unique_tickers_list args: (), elapsed time: 0:54:32.806603
 func _import_stock_quotes args: (), elapsed time: 3:01:36.565506 
 func _concatenate_dataframes args: ('Index_500', 'Stock_Quotes_Dataframe'), elapsed time: 0:00:49.401308
 func _percentage_change args: ('Index_500', 'Stock_Quotes_Dataframe'), elapsed time: 0:04:04.947823 
+func _joining_reports args: (), elapsed time: 0:04:42.944149 
+func _joining_reports args: (), elapsed time: 0:05:01.698516 
+func _joining_reports args: (), elapsed time: 0:04:51.204372 
+func _joining_reports args: (), elapsed time: 0:03:01.209383 
+func _joining_reports args: (), elapsed time: 0:05:01.882523 
