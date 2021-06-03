@@ -7,7 +7,19 @@ import pandas
 class CleaningData:
 
     def __init__(self, dataframe: pandas.DataFrame):
-        self.dataframe = dataframe
+        self.dataframe = dataframe.copy()
+
+    def delete_extra_cols(self, cols: list) -> pandas.DataFrame:
+        """
+        Delete extra columns from dataset.
+        :param cols: list of columns for delete
+        :return: dataframe without extra columns
+        """
+        try:
+            self.dataframe = self.dataframe.drop(cols, axis=1)
+            return self.dataframe
+        except IndexError:
+            print('error: Cols not in index of cols')
 
     def cols_to_datetime(self, cols: list) -> pandas.DataFrame:
         """

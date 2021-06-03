@@ -12,13 +12,16 @@ from data_cleaning import CleaningData
 
 
 @timeit
-def _create_target(stock: pd.DataFrame, data: pd.DataFrame) -> None:
+def _create_target(stock: str, data: str) -> None:
     """
     Creates dataframe: stock + joined report.
     :param stock: dataframe with stock quotes
     :param data: joined dataframe with financials indicators
     :return: None
     """
+    # Open dataframes
+    dataframe_stock = pd.read_parquet(reports[stock])
+    dataframe_data = pd.read_parquet(reports[data])
 
     def _computing_cumulative_product(row: pd.Series) -> float:
         """
@@ -26,31 +29,34 @@ def _create_target(stock: pd.DataFrame, data: pd.DataFrame) -> None:
         :param row: row in the main dataframe
         :return: cumulative product
         """
-        cumulative_product = None
         start = row['alter_filing_date']
         end = start + datetime.timedelta(params.TIME_SLICE)
         ticker = row['ticker']
         try:
-            cumulative_product = stock[
-                (stock['date'] >= start) &
-                (stock['date'] <= end)
+            cumulative_product = dataframe_stock[
+                (dataframe_stock['date'] >= start) &
+                (dataframe_stock['date'] <= end)
                 ][ticker].cumprod().iloc[-1]
+            return cumulative_product
         except (IndexError, KeyError):
             print('error: Ticker not found')
-        return cumulative_product
 
-    cd = CleaningData(data)
-    data = cd.cols_to_datetime(['date', 'filing_date',
-                                'filing_date_x', 'filing_date_y'])
+    cd = CleaningData(dataframe_data)  # Change object type to datetime
+    dataframe_data = cd.cols_to_datetime(['date', 'filing_date',
+                                          'filing_date_x', 'filing_date_y'])
+    dataframe_stock['date'] = dataframe_stock.index
 
-    data['full_filing_date'] = data.apply(_max_filing_date, axis=1)
-    data['alter_filing_date'] = data.apply(_alter_filing_date, axis=1)
+    # Return best series with [filing date] from financials reports
+    dataframe_data['full_filing_date'] = dataframe_data.apply(_max_filing_date, axis=1)
 
-    data['y_1y'] = data.apply(
-        lambda x: _computing_cumulative_product(x),  # Data from stock
-        axis=1                                       # Computing cumprod row by row
-    )
-    data.to_parquet('data.parquet')
+    # If [filing date] is null, [date] + 40 days
+    dataframe_data['alter_filing_date'] = dataframe_data.apply(_alter_filing_date, axis=1)
+
+    # Create target as cumprod on TIME_SLICE
+    dataframe_data['y_1y'] = dataframe_data.apply(_computing_cumulative_product, axis=1)
+
+    # Save main dataframe
+    dataframe_data.to_parquet('data.parquet')
 
 
 @timeit
@@ -58,7 +64,7 @@ def _joining_reports():
     """
     Create joined financial dataframe from several financials reports.
     """
-    # Opening reports
+    # Open reports
     balance = pandas.read_parquet(reports['BalanceSheet'])
     cash = pandas.read_parquet(reports['CashFlow'])
     income = pandas.read_parquet(reports['IncomeStatement'])
@@ -120,13 +126,13 @@ def _alter_filing_date(row: pd.Series) -> pd.Timestamp:
     """
     Alternative date filing if null.
     :param row: Series with timestamp
-    :return: date + 40 days if null or exist filing date
+    :return: <date + ALTER FILING DAYS> if null, or exist filing date
     """
     instance = row['full_filing_date']
     if isinstance(instance, pd.Timestamp):
         return row['full_filing_date']
     else:
-        return row['date'] + datetime.timedelta(40)
+        return row['date'] + datetime.timedelta(params.ALTER_FILING_DAYS)
 
 
 def _max_filing_date(row: pd.Series) -> pd.Timestamp:
@@ -148,6 +154,5 @@ def _max_filing_date(row: pd.Series) -> pd.Timestamp:
 if __name__ == '__main__':
     pass
     # _percentage_change('SP500', 'Stock')
-    # _joining_reports()
-    # _alter_filing()
-    _create_target(reports['StockRelative'], reports['RawData'])
+    _joining_reports()
+    _create_target('StockRelative', 'RawData')
