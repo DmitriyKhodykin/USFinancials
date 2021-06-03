@@ -10,7 +10,7 @@ from services.utils import timeit
 
 
 @timeit
-def _import_index_500(ticker='^GSPC') -> None:
+def import_index_500(ticker='^GSPC') -> None:
     """
     Imports data at index S&P500 from Yahoo Finance.
     :param ticker: name of ticker from Yahoo Finance
@@ -25,7 +25,7 @@ def _import_index_500(ticker='^GSPC') -> None:
 
 
 @timeit
-def _import_stock_quotes() -> None:
+def import_stock_quotes() -> None:
     """
     Get stock quotes by tickers.
     :return: None
@@ -46,7 +46,7 @@ def _import_stock_quotes() -> None:
 
 
 @timeit
-def _get_unique_tickers_list() -> None:
+def get_unique_tickers_list() -> None:
     """
     Save unique list of tickers from reports.
     :return: None
@@ -56,9 +56,9 @@ def _get_unique_tickers_list() -> None:
     cash_report = pd.read_parquet('Cash_Flow_report.parquet')
     income_report = pd.read_parquet('Income_Statement_report.parquet')
 
-    balance_tickers = _not_null_tickers_checker(balance_report)
-    cash_tickers = _not_null_tickers_checker(cash_report)
-    income_tickers = _not_null_tickers_checker(income_report)
+    balance_tickers = not_null_tickers_checker(balance_report)
+    cash_tickers = not_null_tickers_checker(cash_report)
+    income_tickers = not_null_tickers_checker(income_report)
 
     tmp_list: list = balance_tickers + cash_tickers + income_tickers
     unique_tickers = list(set(tmp_list))
@@ -67,7 +67,7 @@ def _get_unique_tickers_list() -> None:
 
 
 @timeit
-def _not_null_tickers_checker(report: pd.DataFrame) -> list:
+def not_null_tickers_checker(report: pd.DataFrame) -> list:
     """
     Returns a list of tickers from report, where `filing_date` - is not null
     :return: list of tickers
@@ -86,5 +86,6 @@ def _not_null_tickers_checker(report: pd.DataFrame) -> list:
 
 
 if __name__ == '__main__':
-    _get_unique_tickers_list()
-    _import_stock_quotes()
+    get_unique_tickers_list()
+    import_stock_quotes()
+    import_index_500()

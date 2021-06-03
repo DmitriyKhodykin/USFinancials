@@ -12,7 +12,7 @@ from data_cleaning import CleaningData
 
 
 @timeit
-def _create_target(stock: str, data: str) -> None:
+def create_target(stock: str, data: str) -> None:
     """
     Creates dataframe: stock + joined report.
     :param stock: dataframe with stock quotes
@@ -23,7 +23,7 @@ def _create_target(stock: str, data: str) -> None:
     dataframe_stock = pd.read_parquet(reports[stock])
     dataframe_data = pd.read_parquet(reports[data])
 
-    def _computing_cumulative_product(row: pd.Series) -> float:
+    def computing_cumulative_product(row: pd.Series) -> float:
         """
         Return cumulative product over a rows in the main dataframe.
         :param row: row in the main dataframe
@@ -47,20 +47,20 @@ def _create_target(stock: str, data: str) -> None:
     dataframe_stock['date'] = dataframe_stock.index
 
     # Return best series with [filing date] from financials reports
-    dataframe_data['full_filing_date'] = dataframe_data.apply(_max_filing_date, axis=1)
+    dataframe_data['full_filing_date'] = dataframe_data.apply(max_filing_date, axis=1)
 
     # If [filing date] is null, [date] + 40 days
-    dataframe_data['alter_filing_date'] = dataframe_data.apply(_alter_filing_date, axis=1)
+    dataframe_data['alter_filing_date'] = dataframe_data.apply(alter_filing_date, axis=1)
 
     # Create target as cumprod on TIME_SLICE
-    dataframe_data['y_1y'] = dataframe_data.apply(_computing_cumulative_product, axis=1)
+    dataframe_data['y_1y'] = dataframe_data.apply(computing_cumulative_product, axis=1)
 
     # Save main dataframe
     dataframe_data.to_parquet('data.parquet')
 
 
 @timeit
-def _joining_reports():
+def joining_reports():
     """
     Create joined financial dataframe from several financials reports.
     """
@@ -84,14 +84,14 @@ def _joining_reports():
 
 
 @timeit
-def _percentage_change(index: str, stock: str) -> None:
+def percentage_change(index: str, stock: str) -> None:
     """
     Percentage change between the current and a prior element.
     :index: dataframe with index ticker
     :stock: dataframe with stock tickers
     :return: dataframe without market noise
     """
-    dataframe = _concatenate_dataframes(index, stock)
+    dataframe = concatenate_dataframes(index, stock)
     relative_dataframe = pandas.DataFrame()
     try:
         dataframe = dataframe.copy()
@@ -104,7 +104,7 @@ def _percentage_change(index: str, stock: str) -> None:
     relative_dataframe.to_parquet('Stock_Quotes_Relative.parquet')
 
 
-def _concatenate_dataframes(name_1: str, name_2: str):
+def concatenate_dataframes(name_1: str, name_2: str):
     """
     Concatenate dataframes from Yahoo Finance.
     :param name_1: Dataframe 1 name
@@ -122,7 +122,7 @@ def _concatenate_dataframes(name_1: str, name_2: str):
     return concatenated_dataframe
 
 
-def _alter_filing_date(row: pd.Series) -> pd.Timestamp:
+def alter_filing_date(row: pd.Series) -> pd.Timestamp:
     """
     Alternative date filing if null.
     :param row: Series with timestamp
@@ -135,7 +135,7 @@ def _alter_filing_date(row: pd.Series) -> pd.Timestamp:
         return row['date'] + datetime.timedelta(params.ALTER_FILING_DAYS)
 
 
-def _max_filing_date(row: pd.Series) -> pd.Timestamp:
+def max_filing_date(row: pd.Series) -> pd.Timestamp:
     """
     Return not null timestamp from all filing dates in main dataframe.
     :param row: Series with timestamp in main dataframe
@@ -152,7 +152,6 @@ def _max_filing_date(row: pd.Series) -> pd.Timestamp:
 
 
 if __name__ == '__main__':
-    pass
-    # _percentage_change('SP500', 'Stock')
-    _joining_reports()
-    _create_target('StockRelative', 'RawData')
+    percentage_change('SP500', 'Stock')
+    joining_reports()
+    create_target('StockRelative', 'RawData')

@@ -10,7 +10,7 @@ from services.utils import timeit
 
 
 @timeit
-def _unpack_data(data_dir='US_Financials') -> None:
+def unpack_data(data_dir='US_Financials') -> None:
     """
     Unpacks a data source archive and save links to files in parquet.
     :return: None
@@ -30,7 +30,7 @@ def _unpack_data(data_dir='US_Financials') -> None:
 
 
 @timeit
-def _create_financial_datasets(links: pd.DataFrame, branch: str) -> None:
+def create_financial_datasets(links: pd.DataFrame, branch: str) -> None:
     """
     Create and save data sets with financials indicators.
     :param links: data frame with links to json files
@@ -61,7 +61,7 @@ def _create_financial_datasets(links: pd.DataFrame, branch: str) -> None:
 
 
 if __name__ == '__main__':
-    _unpack_data()
+    unpack_data()
     links_dataset = pd.read_parquet('links.parquet')
     for branch_item in ['Balance_Sheet', 'Cash_Flow', 'Income_Statement']:
-        _create_financial_datasets(links_dataset, branch_item)
+        create_financial_datasets(links_dataset, branch_item)

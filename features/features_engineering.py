@@ -10,11 +10,9 @@ from services.utils import timeit
 class FeaturesEngineering:
     """
     Engineering new features for main dataframe.
-    :param data: Cleaned dataframe
-    :return: None
     """
     def __init__(self, dataframe: pandas.DataFrame):
-        self.dataframe = dataframe
+        self.dataframe = dataframe.copy()
 
     @timeit
     def transformations(self):
