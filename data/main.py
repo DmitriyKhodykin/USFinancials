@@ -3,8 +3,10 @@ Main module for the raw data pipeline
 """
 import pandas as pd
 
-from . import (data_import, data_preparation,
-               data_transformation, data_cleaning)
+from data import data_preparation, data_import, data_transformation
+from data.data_cleaning import CleaningData
+from settings import params
+from settings.params import reports
 
 
 def main():
@@ -26,6 +28,14 @@ def main():
     data_transformation.percentage_change('SP500', 'Stock')
     data_transformation.joining_reports()
     data_transformation.create_target('StockRelative', 'RawData')
+
+    # Cleaning data
+    cd = CleaningData(pd.read_parquet(reports['RawData']))
+    cd.delete_extra_cols(params.extra_cols)
+    cd.delete_empty_cols()
+    cd.filling_missing_data()
+    cd.cols_to_datetime(params.datetime_cols)
+    cd.save_data()
 
 
 if __name__ == '__main__':

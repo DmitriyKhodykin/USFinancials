@@ -8,14 +8,17 @@ import os
 RAW_DATA_DIRECTORY = os.path.abspath('../data')
 FEATURES_DATA_DIRECTORY = os.path.abspath('../features')
 
+# Logs
+LOGS_DIRECTORY = os.path.abspath('../logs')
+
+# Globals for data pipeline
+TIME_SLICE = 365         # Days from filing date
+ALTER_FILING_DAYS = 40   # + date, if filing date is null
+BAD_FULLNESS_RATE = 0.3  # % empty values in col for delete col
+
 # Models
 RANDOM_SEED = 42
 TEST_SIZE = 0.2
-TIME_SLICE = 365        # Days from filing date
-ALTER_FILING_DAYS = 40  # + date, if filing date is null
-
-# Logs
-LOGS_DIRECTORY = os.path.abspath('../logs')
 
 # Reports
 reports = {
@@ -29,3 +32,35 @@ reports = {
     'CleanData': f'{RAW_DATA_DIRECTORY}/data_clean.parquet',
     'FeaturesData': f'{FEATURES_DATA_DIRECTORY}/data_features.parquet'
 }
+
+# COLUMNS IN MAIN DATAFRAME
+
+# Extra columns in main dataframe (delete by data_cleaning module)
+extra_cols = [
+    'currency_symbol',
+    'currency_symbol_x',
+    'currency_symbol_y',
+    'date_x',
+    'date_y',
+    'filing_date',
+    'filing_date_x',
+    'filing_date_y',
+    'netIncome_y',
+    'ticker_x',
+    'ticker_y',
+    'key'
+]
+
+# Datetime columns
+datetime_cols = [
+    'date',
+    'filing_date',
+    'filing_date_x',
+    'filing_date_y'
+    'full_filing_date',
+    'alter_filing_date'
+]
+
+target_cols = [
+    'y_1y'
+]

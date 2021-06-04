@@ -42,8 +42,7 @@ def create_target(stock: str, data: str) -> None:
             print('error: Ticker not found')
 
     cd = CleaningData(dataframe_data)  # Change object type to datetime
-    dataframe_data = cd.cols_to_datetime(['date', 'filing_date',
-                                          'filing_date_x', 'filing_date_y'])
+    dataframe_data = cd.cols_to_datetime(params.datetime_cols)
     dataframe_stock['date'] = dataframe_stock.index
 
     # Return best series with [filing date] from financials reports
@@ -62,7 +61,7 @@ def create_target(stock: str, data: str) -> None:
 @timeit
 def joining_reports():
     """
-    Create joined financial dataframe from several financials reports.
+    Creates joined financial dataframe from several financials reports.
     """
     # Open reports
     balance = pandas.read_parquet(reports['BalanceSheet'])
