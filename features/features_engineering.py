@@ -21,10 +21,10 @@ class FeaturesEngineering:
 
     @timeit
     def save_data(self):
-        self.dataframe.to_parquet('data.parquet')
+        self.dataframe.to_parquet('data_features.parquet')
 
 
 if __name__ == '__main__':
-    fe = FeaturesEngineering(pandas.read_parquet(reports['RawData']))
+    fe = FeaturesEngineering(pandas.read_parquet(reports['CleanData']))
     fe.transformations()
     fe.save_data()

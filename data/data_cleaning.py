@@ -42,9 +42,13 @@ class CleaningData:
 
     @timeit
     def save_data(self):
-        self.dataframe.to_parquet('data.parquet')
+        self.dataframe.to_parquet('data_clean.parquet')
 
 
 if __name__ == '__main__':
-    cd = CleaningData(reports['RawData'])
+    cd = CleaningData(pandas.read_parquet(reports['RawData']))
+    cd.delete_extra_cols(['currency_symbol', 'currency_symbol_x', 'currency_symbol_y', 'date_x',
+                          'date_y', 'filing_date', 'filing_date_x', 'filing_date_y', 'netIncome_y',
+                          'ticker_x', 'ticker_y'])
+    cd.cols_to_datetime(['full_filing_date', 'alter_filing_date'])
     cd.save_data()
