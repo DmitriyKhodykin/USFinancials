@@ -32,8 +32,10 @@ def main():
     # Cleaning data
     cd = CleaningData(pd.read_parquet(reports['RawData']))
     cd.delete_extra_cols(params.extra_cols)
+    cd.delete_rows_without_target()
     cd.delete_empty_cols()
     cd.filling_missing_data()
+    cd.delete_empty_rows()
     cd.cols_to_datetime(params.datetime_cols)
     cd.save_data()
 

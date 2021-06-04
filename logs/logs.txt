@@ -26,3 +26,10 @@ func delete_extra_cols args: (<__main__.CleaningData object at 0x0000027B1A3DCF1
 func delete_extra_cols args: (<__main__.CleaningData object at 0x000001853211CF10>, ['currency_symbol', 'currency_symbol_x', 'currency_symbol_y', 'date_x', 'date_y', 'filing_date', 'filing_date_x', 'filing_date_y', 'netIncome_y', 'ticker_x', 'ticker_y', 'key']), elapsed time: 0:00:44.792389 
 func cols_to_datetime args: (<__main__.CleaningData object at 0x000001853211CF10>, ['date', 'filing_date', 'filing_date_x', 'filing_date_yfull_filing_date', 'alter_filing_date']), elapsed time: 0:00:09.842756 
 func save_data args: (<__main__.CleaningData object at 0x000001853211CF10>,), elapsed time: 0:00:59.849255 
+func delete_extra_cols args: (<__main__.CleaningData object at 0x000001E7C2BD24C0>, ['currency_symbol', 'currency_symbol_x', 'currency_symbol_y', 'date_x', 'date_y', 'filing_date', 'filing_date_x', 'filing_date_y', 'netIncome_y', 'ticker_x', 'ticker_y', 'key']), elapsed time: 0:00:05.452468 
+func delete_rows_without_target args: (<__main__.CleaningData object at 0x000001E7C2BD24C0>,), elapsed time: 0:29:30.739438 
+func delete_empty_cols args: (<__main__.CleaningData object at 0x000001E7C2BD24C0>,), elapsed time: 0:00:02.359072 
+func filling_missing_data args: (<__main__.CleaningData object at 0x000001E7C2BD24C0>,), elapsed time: 0:00:00.015623 
+func delete_empty_rows args: (<__main__.CleaningData object at 0x000001E7C2BD24C0>,), elapsed time: 0:00:00.671801 
+func cols_to_datetime args: (<__main__.CleaningData object at 0x000001E7C2BD24C0>, ['date', 'filing_date', 'filing_date_x', 'filing_date_yfull_filing_date', 'alter_filing_date']), elapsed time: 0:00:00.093752 
+func save_data args: (<__main__.CleaningData object at 0x000001E7C2BD24C0>,), elapsed time: 0:00:05.905550 

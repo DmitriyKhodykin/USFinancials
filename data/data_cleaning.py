@@ -60,6 +60,15 @@ class CleaningData:
         return self.dataframe
 
     @timeit
+    def delete_empty_rows(self) -> pandas.DataFrame:
+        """
+        Removes rows with Nan.
+        :return: dataframe with reach populated rows
+        """
+        self.dataframe = self.dataframe.dropna(axis=0)
+        return self.dataframe
+
+    @timeit
     def cols_to_datetime(self, cols: list) -> pandas.DataFrame:
         """
         Transforming objects of dataframes to datetime.
@@ -84,5 +93,6 @@ if __name__ == '__main__':
     cd.delete_rows_without_target()
     cd.delete_empty_cols()
     cd.filling_missing_data()
+    cd.delete_empty_rows()
     cd.cols_to_datetime(params.datetime_cols)
     cd.save_data()
