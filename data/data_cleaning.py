@@ -5,7 +5,6 @@ import pandas
 
 from settings import params
 from settings.params import reports
-from services.utils import timeit
 
 
 class CleaningData:
@@ -13,76 +12,65 @@ class CleaningData:
     def __init__(self, dataframe: pandas.DataFrame):
         self.dataframe = dataframe.copy()
 
-    @timeit
-    def delete_extra_cols(self, cols: list) -> pandas.DataFrame:
+    def delete_extra_cols(self, cols: list) -> None:
         """
         Deletes extra columns from dataset.
         :param cols: list of columns for delete
-        :return: dataframe without extra columns
+        :return: None
         """
         try:
             self.dataframe = self.dataframe.drop(cols, axis=1)
-            return self.dataframe
         except IndexError:
             print('error: Cols not in index of cols')
 
-    @timeit
-    def delete_rows_without_target(self) -> pandas.DataFrame:
+    def delete_rows_without_target(self, target) -> None:
         """
         Removes lines with no target value.
-        :return: dataframe without no targeting rows
+        :param target: target cols
+        :return: None
         """
+        self.dataframe[target] = self.dataframe[target].astype(float)
         self.dataframe = self.dataframe[
-            self.dataframe[params.target_cols].notnull()
+            self.dataframe[target].notnull()
         ]
-        return self.dataframe
 
-    @timeit
-    def delete_empty_cols(self) -> pandas.DataFrame:
+    def delete_empty_cols(self) -> None:
         """
         Removes columns with poorly populated data.
-        :return: dataframe with reach populated cols
+        :return: None
         """
         full_cols = []
         for col in self.dataframe.columns:
             if self.dataframe[col].isnull().sum() / len(self.dataframe) < params.BAD_FULLNESS_RATE:
                 full_cols.append(col)
         self.dataframe = self.dataframe[full_cols]
-        return self.dataframe
 
-    @timeit
-    def filling_missing_data(self) -> pandas.DataFrame:
+    def filling_missing_data(self) -> None:
         """
         Filling in missing data based on available data.
-        :return: dataframe with reach populated cols
+        :return: None
         """
         self.dataframe = self.dataframe.fillna(method='backfill')
-        return self.dataframe
 
-    @timeit
-    def delete_empty_rows(self) -> pandas.DataFrame:
+    def delete_empty_rows(self) -> None:
         """
         Removes rows with Nan.
-        :return: dataframe with reach populated rows
+        :return: None
         """
         self.dataframe = self.dataframe.dropna(axis=0)
-        return self.dataframe
 
-    @timeit
-    def cols_to_datetime(self, cols: list) -> pandas.DataFrame:
+    def cols_to_datetime(self, cols: list) -> None:
         """
         Transforming objects of dataframes to datetime.
         :param cols: List of objects cols
-        :return: Dataframe with datetime cols
+        :return: None
         """
         for col in cols:
             try:
                 self.dataframe[col] = pandas.to_datetime(self.dataframe[col])
             except KeyError:
                 pass
-        return self.dataframe
 
-    @timeit
     def save_data(self) -> None:
         self.dataframe.to_parquet('data_clean.parquet')
 
@@ -90,7 +78,7 @@ class CleaningData:
 if __name__ == '__main__':
     cd = CleaningData(pandas.read_parquet(reports['RawData']))
     cd.delete_extra_cols(params.extra_cols)
-    cd.delete_rows_without_target()
+    cd.delete_rows_without_target(params.target_cols[0])
     cd.delete_empty_cols()
     cd.filling_missing_data()
     cd.delete_empty_rows()
