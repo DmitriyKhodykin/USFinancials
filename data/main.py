@@ -32,7 +32,7 @@ def main():
     # Cleaning data
     cd = CleaningData(pd.read_parquet(reports['RawData']))
     cd.delete_extra_cols(params.extra_cols)
-    cd.delete_rows_without_target()
+    cd.delete_rows_without_target(params.target_cols[0])
     cd.delete_empty_cols()
     cd.filling_missing_data()
     cd.delete_empty_rows()
