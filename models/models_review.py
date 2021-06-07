@@ -2,6 +2,10 @@
 Reviews some models on default params.
 """
 import pandas
+from sklearn.metrics import f1_score
+
+from services.utils import hold_out
+from settings import params
 
 
 def review_classification(dataframe: pandas.DataFrame) -> None:
@@ -12,16 +16,13 @@ def review_classification(dataframe: pandas.DataFrame) -> None:
     """
 
     # Hold-out
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size, random_state=RANDOM_SEED
-    )
+    x_train, x_test, y_train, y_test = hold_out(dataframe)
 
     # CatBoost
-    model_cb = CatBoostClassifier(random_state=RANDOM_SEED)
-    model_cb.fit(X_train, y_train, silent=True)
-    y_cb = model_cb.predict(X_test)
-    f_cb = f1_score(y_test, y_cb)
-    fi_cb = model_cb.get_feature_importance()
+    catboost_model = CatBoostClassifier(random_state=params.RANDOM_SEED)
+    catboost_model.fit(x_train, y_train, silent=True)
+    y_catboost_model = catboost_model.predict(x_test)
+    f1_score_catboost = f1_score(y_test, y_catboost_model)
 
     # LightGBM
     model_lgb = LGBMClassifier(random_state=RANDOM_SEED)
@@ -52,19 +53,12 @@ def review_classification(dataframe: pandas.DataFrame) -> None:
     # importances_svc = model_svc.coef_
 
     # Таблица итогового сравнения
-    results = pd.DataFrame({
+    results = pandas.DataFrame({
         'Classifier': ['CatBoost', 'LGBM', 'XGB', 'RandomForest', 'SVC'],
-        'F1_Score': [f_cb, f_lgb, f_xgb, f_rf, f_svc],
-        'Feature_Importances': [fi_cb, fi_lgb, fi_xgb, fi_rf, '']
+        'F1Score': [f_cb, f_lgb, f_xgb, f_rf, f_svc],
+        'FeatureImportances': [fi_cb, fi_lgb, fi_xgb, fi_rf, '']
     })
 
     sorted_results = results.sort_values(by=['F1_Score'], ascending=False)
 
     print(sorted_results)
-
-    top_results = sorted_results.head(3)
-
-    mean_feature_importances = np.mean(top_results['Feature_Importances'],
-                                       axis=0)
-
-    return mean_feature_importances
