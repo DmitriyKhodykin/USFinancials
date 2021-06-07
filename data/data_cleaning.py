@@ -41,7 +41,8 @@ class CleaningData:
         """
         full_cols = []
         for col in self.dataframe.columns:
-            if self.dataframe[col].isnull().sum() / len(self.dataframe) < params.BAD_FULLNESS_RATE:
+            if self.dataframe[col].isnull().sum() / len(self.dataframe) \
+                    < params.BAD_FULLNESS_RATE:
                 full_cols.append(col)
         self.dataframe = self.dataframe[full_cols]
 
