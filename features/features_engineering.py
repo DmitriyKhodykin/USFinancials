@@ -14,12 +14,10 @@ class FeaturesEngineering:
     def __init__(self, dataframe: pandas.DataFrame):
         self.dataframe = dataframe.copy()
 
-    @timeit
     def transformations(self):
         pass
         # Some transformations
 
-    @timeit
     def save_data(self):
         self.dataframe.to_parquet('data_features.parquet')
 
