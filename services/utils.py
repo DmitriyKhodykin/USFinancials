@@ -37,7 +37,7 @@ def hold_out(dataframe: pandas.DataFrame):
     """
     dataframe = dataframe.copy()
     try:
-        x = dataframe.drop(params.target_cols)
+        x = dataframe.drop(params.target_cols, axis=1)
         y = dataframe[params.target_cols]
         x_train, x_test, y_train, y_test = train_test_split(
             x, y, test_size=params.TEST_SIZE,
