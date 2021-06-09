@@ -29,6 +29,21 @@ def timeit(func):
     return wrapper
 
 
+def create_binary_target(dataframe: pandas.DataFrame, target: str,
+                         cut_off_value: float) -> pandas.Series:
+    """
+    Creates binary target from cut-off threshold value and real target
+    :param dataframe: Main dataframe
+    :param cut_off_value: Everything above the cut-off threshold is 1
+    :param target: Name of target column
+    :return: Binary target series
+    """
+    y_subset = dataframe[target].apply(
+        lambda t: 1 if t > cut_off_value else 0
+    )
+    return y_subset
+
+
 def hold_out(dataframe: pandas.DataFrame):
     """
     Split arrays or matrices into random train and test subsets.
@@ -38,7 +53,11 @@ def hold_out(dataframe: pandas.DataFrame):
     dataframe = dataframe.copy()
     try:
         x = dataframe.drop(params.target_cols, axis=1)
-        y = dataframe[params.target_cols]
+        y = create_binary_target(
+            dataframe,
+            params.target_cols[0],
+            params.CUT_OFF_VALUE
+        )
         x_train, x_test, y_train, y_test = train_test_split(
             x, y, test_size=params.TEST_SIZE,
             random_state=params.RANDOM_SEED

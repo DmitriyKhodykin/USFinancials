@@ -15,6 +15,7 @@ LOGS_DIRECTORY = os.path.abspath('../logs')
 TIME_SLICE = 365         # Days from filing date
 ALTER_FILING_DAYS = 40   # + date, if filing date is null
 BAD_FULLNESS_RATE = 0.3  # % empty values in col for delete col
+CUT_OFF_VALUE = 1.05     # For binary target
 
 # Models
 RANDOM_SEED = 42
