@@ -23,17 +23,16 @@ def review_classification(dataframe: pandas.DataFrame) -> None:
     """
 
     dataframe = dataframe.copy()
-    # for i in dataframe.columns:
-    #     try:
-    #         dataframe[i] = dataframe[i].astype(float)
-    #     except (ValueError, TypeError):
-    #         dataframe.drop(i, axis=1, inplace=True)
 
-    dataframe = dataframe.drop(['date', 'ticker', 'alter_filing_date',
-                                ], axis=1)
+    for i in dataframe.columns:
+        try:
+            dataframe[i] = dataframe[i].astype(float)
+        except (ValueError, TypeError):
+            dataframe.drop(i, axis=1, inplace=True)
+
     x = dataframe.drop('y_1y', axis=1)
     y = dataframe['y_1y'].apply(lambda t: 1 if t > 1.05 else 0)
-    print(y)
+    # print(y)
     # Hold-out
     # x_train, x_test, y_train, y_test = hold_out(dataframe)
     x_train, x_test, y_train, y_test = train_test_split(

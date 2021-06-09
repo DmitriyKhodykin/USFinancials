@@ -2,6 +2,7 @@
 Module for cleaning main dataframe.
 """
 import pandas
+import pandas as pd
 
 from settings import params
 from settings.params import reports
@@ -12,14 +13,15 @@ class CleaningData:
     def __init__(self, dataframe: pandas.DataFrame):
         self.dataframe = dataframe.copy()
 
-    def delete_extra_cols(self, cols: list) -> None:
+    def delete_extra_cols(self, cols: list) -> pd.DataFrame:
         """
         Deletes extra columns from dataset.
         :param cols: list of columns for delete
-        :return: None
+        :return: Dataframe without extra cols
         """
         try:
             self.dataframe = self.dataframe.drop(cols, axis=1)
+            return self.dataframe
         except IndexError:
             print('error: Cols not in index of cols')
 
@@ -34,10 +36,10 @@ class CleaningData:
             self.dataframe[target].notnull()
         ]
 
-    def delete_empty_cols(self) -> None:
+    def delete_empty_cols(self) -> pd.DataFrame:
         """
         Removes columns with poorly populated data.
-        :return: None
+        :return: Dataframe with reach populated cols
         """
         full_cols = []
         for col in self.dataframe.columns:
@@ -45,22 +47,25 @@ class CleaningData:
                     < params.BAD_FULLNESS_RATE:
                 full_cols.append(col)
         self.dataframe = self.dataframe[full_cols]
+        return self.dataframe
 
-    def filling_missing_data(self) -> None:
+    def filling_missing_data(self) -> pd.DataFrame:
         """
         Filling in missing data based on available data.
-        :return: None
+        :return: Dataframe with reach populated rows
         """
         self.dataframe = self.dataframe.fillna(method='backfill')
+        return self.dataframe
 
-    def delete_empty_rows(self) -> None:
+    def delete_empty_rows(self) -> pd.DataFrame:
         """
         Removes rows with Nan.
-        :return: None
+        :return: Dataframe with reach populated rows
         """
         self.dataframe = self.dataframe.dropna(axis=0)
+        return self.dataframe
 
-    def cols_to_datetime(self, cols: list) -> None:
+    def cols_to_datetime(self, cols: list) -> pd.DataFrame:
         """
         Transforming objects of dataframes to datetime.
         :param cols: List of objects cols
@@ -69,6 +74,7 @@ class CleaningData:
         for col in cols:
             try:
                 self.dataframe[col] = pandas.to_datetime(self.dataframe[col])
+                return self.dataframe
             except KeyError:
                 pass
 
