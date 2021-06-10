@@ -1,5 +1,5 @@
 """
-Params for project setting.
+Configuration for project setting.
 """
 
 import os
