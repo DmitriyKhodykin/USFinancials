@@ -10,7 +10,7 @@ from sklearn.metrics import f1_score
 from sklearn.svm import SVC
 
 from services.utils import hold_out
-from settings.params import reports
+from settings.config import reports
 
 
 def review_classification(dataframe: pandas.DataFrame) -> None:
@@ -36,7 +36,6 @@ def review_classification(dataframe: pandas.DataFrame) -> None:
     models = {
         'CatBoost': CatBoostClassifier(silent=True),
         'LGBM': LGBMClassifier(),
-        # 'XGB': XGBClassifier,
         'RandomForest': RandomForestClassifier(),
         'LogisticRegression': LogisticRegression(),
         'SVC': SVC(kernel='sigmoid')

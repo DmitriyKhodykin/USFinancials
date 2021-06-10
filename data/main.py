@@ -5,8 +5,8 @@ import pandas as pd
 
 from data import data_preparation, data_import, data_transformation
 from data.data_cleaning import CleaningData
-from settings import params
-from settings.params import reports
+from settings import config
+from settings.config import reports
 
 
 def main():
@@ -31,12 +31,12 @@ def main():
 
     # Cleaning data
     cd = CleaningData(pd.read_parquet(reports['RawData']))
-    cd.delete_extra_cols(params.extra_cols)
-    cd.delete_rows_without_target(params.target_cols[0])
+    cd.delete_extra_cols(config.extra_cols)
+    cd.delete_rows_without_target(config.target_cols[0])
     cd.delete_empty_cols()
     cd.filling_missing_data()
     cd.delete_empty_rows()
-    cd.cols_to_datetime(params.datetime_cols)
+    cd.cols_to_datetime(config.datetime_cols)
     cd.save_data()
 
 

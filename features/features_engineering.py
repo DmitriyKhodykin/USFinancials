@@ -3,7 +3,7 @@ Features Engineering module for main dataframe.
 """
 import pandas
 
-from settings.params import reports
+from settings.config import reports
 from services.utils import timeit
 
 

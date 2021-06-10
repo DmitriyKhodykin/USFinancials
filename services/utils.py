@@ -6,7 +6,7 @@ from datetime import datetime
 import pandas
 from sklearn.model_selection import train_test_split
 
-from settings import params
+from settings import config
 
 
 def timeit(func):
@@ -14,7 +14,7 @@ def timeit(func):
     Counts the time taken to execute the wrapped function.
     :return: func, elapsed time
     """
-    logs_directory = params.LOGS_DIRECTORY
+    logs_directory = config.LOGS_DIRECTORY
 
     def wrapper(*args, **kwargs):
         start = datetime.now()
@@ -52,15 +52,15 @@ def hold_out(dataframe: pandas.DataFrame):
     """
     dataframe = dataframe.copy()
     try:
-        x = dataframe.drop(params.target_cols, axis=1)
+        x = dataframe.drop(config.target_cols, axis=1)
         y = create_binary_target(
             dataframe,
-            params.target_cols[0],
-            params.CUT_OFF_VALUE
+            config.target_cols[0],
+            config.CUT_OFF_VALUE
         )
         x_train, x_test, y_train, y_test = train_test_split(
-            x, y, test_size=params.TEST_SIZE,
-            random_state=params.RANDOM_SEED
+            x, y, test_size=config.TEST_SIZE,
+            random_state=config.RANDOM_SEED
         )
         return x_train, x_test, y_train, y_test
     except KeyError:

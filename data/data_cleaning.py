@@ -4,8 +4,8 @@ Module for cleaning main dataframe.
 import pandas
 import pandas as pd
 
-from settings import params
-from settings.params import reports
+from settings import config
+from settings.config import reports
 
 
 class CleaningData:
@@ -44,7 +44,7 @@ class CleaningData:
         full_cols = []
         for col in self.dataframe.columns:
             if self.dataframe[col].isnull().sum() / len(self.dataframe) \
-                    < params.BAD_FULLNESS_RATE:
+                    < config.BAD_FULLNESS_RATE:
                 full_cols.append(col)
         self.dataframe = self.dataframe[full_cols]
         return self.dataframe
@@ -84,10 +84,10 @@ class CleaningData:
 
 if __name__ == '__main__':
     cd = CleaningData(pandas.read_parquet(reports['RawData']))
-    cd.delete_extra_cols(params.extra_cols)
-    cd.delete_rows_without_target(params.target_cols[0])
+    cd.delete_extra_cols(config.extra_cols)
+    cd.delete_rows_without_target(config.target_cols[0])
     cd.delete_empty_cols()
     cd.filling_missing_data()
     cd.delete_empty_rows()
-    cd.cols_to_datetime(params.datetime_cols)
+    cd.cols_to_datetime(config.datetime_cols)
     cd.save_data()

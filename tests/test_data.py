@@ -5,7 +5,7 @@ from unittest import TestCase
 
 import pandas
 
-from settings.params import reports
+from settings.config import reports
 
 pd = pandas.read_parquet(reports['FeaturesData'])
 

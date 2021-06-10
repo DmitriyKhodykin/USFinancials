@@ -5,9 +5,9 @@ import datetime
 import pandas
 import pandas as pd
 
-from settings import params
+from settings import config
 from services.utils import timeit
-from settings.params import reports
+from settings.config import reports
 from data_cleaning import CleaningData
 
 
@@ -30,7 +30,7 @@ def create_target(stock: str, data: str) -> None:
         :return: cumulative product
         """
         start = row['alter_filing_date']
-        end = start + datetime.timedelta(params.TIME_SLICE)
+        end = start + datetime.timedelta(config.TIME_SLICE)
         ticker = row['ticker']
         try:
             cumulative_product = dataframe_stock[
@@ -42,7 +42,7 @@ def create_target(stock: str, data: str) -> None:
             print('error: Ticker not found')
 
     cd = CleaningData(dataframe_data)  # Change object type to datetime
-    dataframe_data = cd.cols_to_datetime(params.datetime_cols)
+    dataframe_data = cd.cols_to_datetime(config.datetime_cols)
     dataframe_stock['date'] = dataframe_stock.index
 
     # Return best series with [filing date] from financials reports
@@ -131,7 +131,7 @@ def alter_filing_date(row: pd.Series) -> pd.Timestamp:
     if isinstance(instance, pd.Timestamp):
         return row['full_filing_date']
     else:
-        return row['date'] + datetime.timedelta(params.ALTER_FILING_DAYS)
+        return row['date'] + datetime.timedelta(config.ALTER_FILING_DAYS)
 
 
 def max_filing_date(row: pd.Series) -> pd.Timestamp:
