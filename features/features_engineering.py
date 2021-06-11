@@ -4,15 +4,14 @@ Features Engineering module for main dataframe.
 import pandas
 
 from settings.config import reports
-from services.utils import timeit
 
 
 class FeaturesEngineering:
     """
     Engineering new features for main dataframe.
     """
-    def __init__(self, dataframe: pandas.DataFrame):
-        self.dataframe = dataframe.copy()
+    def __init__(self):
+        self.dataframe = pandas.read_parquet(reports['CleanData'])
 
     def transformations(self):
         pass
@@ -23,6 +22,6 @@ class FeaturesEngineering:
 
 
 if __name__ == '__main__':
-    fe = FeaturesEngineering(pandas.read_parquet(reports['CleanData']))
+    fe = FeaturesEngineering()
     fe.transformations()
     fe.save_data()

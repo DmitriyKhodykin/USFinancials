@@ -2,44 +2,26 @@
 Reviews some models on default params.
 """
 import pandas
-from catboost import CatBoostClassifier
-from lightgbm import LGBMClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
-from sklearn.svm import SVC
 
 from services.utils import hold_out
+from settings import params
 from settings.config import reports
 
 
-def review_classification(dataframe: pandas.DataFrame) -> None:
+def review_classification() -> str:
     """
     Reviews some models at standard settings and compares the results.
-    :param dataframe: Main dataframe
-    :return: None
+    :return: Best model name
     """
-
+    dataframe = pandas.read_parquet(reports['FeaturesData'])
     dataframe = dataframe.copy()
-
-    # Delete type object cols
-    for i in dataframe.columns:
-        try:
-            dataframe[i] = dataframe[i].astype(float)
-        except (ValueError, TypeError):
-            dataframe.drop(i, axis=1, inplace=True)
 
     # Hold-out
     x_train, x_test, y_train, y_test = hold_out(dataframe)
 
-    # Models
-    models = {
-        'CatBoost': CatBoostClassifier(silent=True),
-        'LGBM': LGBMClassifier(),
-        'RandomForest': RandomForestClassifier(),
-        'LogisticRegression': LogisticRegression(),
-        'SVC': SVC(kernel='sigmoid')
-    }
+    # Models from
+    models = params.models_dict
 
     results = pandas.DataFrame(columns=['Name', 'F1Score'])
 
@@ -47,14 +29,22 @@ def review_classification(dataframe: pandas.DataFrame) -> None:
         model.fit(x_train, y_train)
         y_predict = model.predict(x_test)
         score = f1_score(y_test, y_predict)
-        print(name, 'F1Score:', score)
-        tmp_results = pandas.DataFrame({name: score})
-        results = results.append(tmp_results)
 
-    sorted_results = results.sort_values(by=['F1Score'], ascending=False)
+        tmp_results = pandas.DataFrame(
+            {'Name': [name], 'F1Score': [score]}
+        )
+        results = results.append(tmp_results,
+                                 ignore_index=True)
+
+    sorted_results = results.sort_values(
+        by=['F1Score'],
+        ascending=False
+    )
     print(sorted_results)
+    best_model_name: str = sorted_results.head(1)['Name'].values[0]
+
+    return best_model_name
 
 
 if __name__ == '__main__':
-    data = pandas.read_parquet(reports['FeaturesData'])
-    review_classification(data)
+    review_classification()

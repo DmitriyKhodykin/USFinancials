@@ -5,12 +5,21 @@ from catboost import CatBoostClassifier
 from lightgbm import LGBMClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
 
-models_list = {
-    'CatBoost': CatBoostClassifier(silent=True),
-    'LGBM': LGBMClassifier(),
-    'RandomForest': RandomForestClassifier(),
-    'LogisticRegression': LogisticRegression(),
-    'SVC': SVC(kernel='sigmoid')
+from settings import config
+
+models_dict = {
+    'CatBoost': CatBoostClassifier(
+        silent=True,
+        random_state=config.RANDOM_SEED
+    ),
+    'LGBM': LGBMClassifier(
+        random_state=config.RANDOM_SEED
+    ),
+    'RandomForest': RandomForestClassifier(
+        random_state=config.RANDOM_SEED
+    ),
+    'LogisticRegression': LogisticRegression(
+        random_state=config.RANDOM_SEED
+    )
 }

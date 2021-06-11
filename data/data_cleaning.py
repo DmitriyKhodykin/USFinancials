@@ -78,6 +78,17 @@ class CleaningData:
             except KeyError:
                 pass
 
+    def delete_type_object_cols(self) -> None:
+        """
+        Deletes all non-float columns.
+        :return: None
+        """
+        for i in self.dataframe.columns:
+            try:
+                self.dataframe[i] = self.dataframe[i].astype(float)
+            except (ValueError, TypeError):
+                self.dataframe.drop(i, axis=1, inplace=True)
+
     def save_data(self) -> None:
         self.dataframe.to_parquet('data_clean.parquet')
 
@@ -89,5 +100,5 @@ if __name__ == '__main__':
     cd.delete_empty_cols()
     cd.filling_missing_data()
     cd.delete_empty_rows()
-    cd.cols_to_datetime(config.datetime_cols)
+    cd.delete_type_object_cols()
     cd.save_data()
