@@ -8,6 +8,8 @@ from sklearn.linear_model import LogisticRegression
 
 from settings import config
 
+FEATURES_IMPORTANT_RATE = 2.5
+
 models_dict = {
     'CatBoost': CatBoostClassifier(
         silent=True,
