@@ -24,9 +24,11 @@ def train_cv() -> dict:
     # Balancing classes
     sss = StratifiedShuffleSplit(n_splits=5, random_state=config.RANDOM_SEED)
 
+    # Selection of the best model
     best_model_name = review_classification()
     best_model = params.models_dict[best_model_name]
 
+    # Selection of the most important features for the model
     imp = FeaturesImportance()
     best_cols_list = imp.evaluate_importance()
     x_best = dataframe[best_cols_list]
@@ -40,6 +42,7 @@ def train_cv() -> dict:
         cv=sss,
         return_train_score=True
     )
+
     # Fitting
     estimator.fit(x_best, y)
 

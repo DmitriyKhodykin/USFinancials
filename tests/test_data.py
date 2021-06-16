@@ -7,7 +7,6 @@ import pandas
 
 from settings.config import reports
 
-pd = pandas.read_parquet(reports['FeaturesData'])
+data = pandas.read_parquet(reports['FeaturesData'])
 
-for i in pd.iterrows():
-    print(i)
+print(data)
