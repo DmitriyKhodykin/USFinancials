@@ -1,5 +1,5 @@
 """
-Main module for the raw data pipeline
+Main module for the raw data pipeline.
 """
 import pandas as pd
 

@@ -44,13 +44,12 @@ def create_binary_target(dataframe: pandas.DataFrame, target: str,
     return y_subset
 
 
-def hold_out(dataframe: pandas.DataFrame):
+def split_data(dataframe: pandas.DataFrame):
     """
-    Split arrays or matrices into random train and test subsets.
+    Split dataframe to x subset and y subset.
     :param dataframe: Main dataframe
-    :return: Train and test subsets
+    :return: x, y
     """
-    dataframe = dataframe.copy()
     try:
         x = dataframe.drop(config.target_cols, axis=1)
         y = create_binary_target(
@@ -58,6 +57,20 @@ def hold_out(dataframe: pandas.DataFrame):
             config.target_cols[0],
             config.CUT_OFF_VALUE
         )
+        return x, y
+    except KeyError:
+        print('error: Columns with target not found')
+
+
+def hold_out(dataframe: pandas.DataFrame):
+    """
+    Split arrays or matrices into random train and test subsets.
+    :param dataframe: Main dataframe
+    :return: Train and test subsets
+    """
+    dataframe = dataframe.copy()
+    x, y = split_data(dataframe)
+    try:
         x_train, x_test, y_train, y_test = train_test_split(
             x, y, test_size=config.TEST_SIZE,
             random_state=config.RANDOM_SEED
