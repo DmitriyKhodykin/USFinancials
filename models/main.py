@@ -50,8 +50,8 @@ class Model:
         estimator.fit(x_best, self.y)
 
         # Fitting outcomes - vocabulary with lists of characteristics
-        print('Best Score:', estimator.best_score_)
-        print('Best Params:', estimator.best_params_)
+        print('Best CV Score:', estimator.best_score_)
+        print('Best CV Params:', estimator.best_params_)
         return estimator.best_params_
 
     def evaluate_features_importance(self) -> list:
@@ -108,5 +108,4 @@ class Model:
 if __name__ == '__main__':
     model = Model()
     model.review_classification()
-    model.evaluate_features_importance()
     model.train_cv()
