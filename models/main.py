@@ -17,9 +17,23 @@ class Model:
         self.x, self.y = split_data(self.dataframe)
         self.x_train, self.x_test, self.y_train, self.y_test = hold_out(self.dataframe)
         self.best_model_name = None  # A variable to store the name of the best model
+        self.best_cols_list = []  # List for the best features names
 
     def save_best_model(self):
-        pass
+        """
+        Trains the model for the best features and parameters and serializes it.
+        :return:
+        """
+        # Selection of the best model
+        best_model = params.models_dict[self.best_model_name]
+
+        # Set best params for the best model
+        best_params = self.train_cv()
+        best_model.set_params(best_params)
+
+        x_best = self.x[self.best_cols_list]
+
+        best_model.fit(x_best, self.y)
 
     def train_cv(self) -> dict:
         """
@@ -35,7 +49,7 @@ class Model:
 
         # Selection of the most important features for the model
         best_cols_list = self.evaluate_features_importance()
-        x_best = self.x[best_cols_list]
+        x_best = self.x[self.best_cols_list]
 
         # Cross-validation on n-folds, enumeration of the best parameters
         estimator = GridSearchCV(
@@ -71,10 +85,11 @@ class Model:
             if feature > params.FEATURES_IMPORTANT_RATE:
                 best_features_indexes.append(index)
 
-        best_cols_list = [self.dataframe.columns[x] for x in best_features_indexes]
-
-        print(best_cols_list)
-        return best_cols_list
+        self.best_cols_list = [
+            self.dataframe.columns[x] for x in best_features_indexes
+        ]
+        print(self.best_cols_list)
+        return self.best_cols_list
 
     def review_classification(self) -> str:
         """
@@ -108,4 +123,4 @@ class Model:
 if __name__ == '__main__':
     model = Model()
     model.review_classification()
-    model.train_cv()
+    model.save_best_model()
