@@ -1,6 +1,8 @@
 """
 Main module for creating serialized model
 """
+import pickle
+
 import pandas
 from sklearn.metrics import f1_score
 from sklearn.model_selection import StratifiedShuffleSplit, GridSearchCV
@@ -22,18 +24,26 @@ class Model:
     def save_best_model(self):
         """
         Trains the model for the best features and parameters and serializes it.
-        :return:
+        :return: None
         """
         # Selection of the best model
         best_model = params.models_dict[self.best_model_name]
 
         # Set best params for the best model
         best_params = self.train_cv()
-        best_model.set_params(best_params)
 
-        x_best = self.x[self.best_cols_list]
+        # Fitting the best model on the best params
+        best_model.set_params(**best_params)
+        # x_best = self.x[self.best_cols_list]
+        best_model.fit(self.x_train[self.best_cols_list], self.y_train)
 
-        best_model.fit(x_best, self.y)
+        # Scoring model
+        y_best_predict = best_model.predict(self.x_test[self.best_cols_list])
+        score = f1_score(self.y_test, y_best_predict)
+        print('Best F1 Score:', score)
+
+        # Saving model
+        pickle.dump(best_model, open('model.pickle', 'wb'))
 
     def train_cv(self) -> dict:
         """
@@ -48,7 +58,6 @@ class Model:
         best_model = params.models_dict[self.best_model_name]
 
         # Selection of the most important features for the model
-        best_cols_list = self.evaluate_features_importance()
         x_best = self.x[self.best_cols_list]
 
         # Cross-validation on n-folds, enumeration of the best parameters
@@ -123,4 +132,5 @@ class Model:
 if __name__ == '__main__':
     model = Model()
     model.review_classification()
+    model.evaluate_features_importance()
     model.save_best_model()
