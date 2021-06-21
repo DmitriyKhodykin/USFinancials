@@ -15,7 +15,7 @@ from settings.config import reports
 class Model:
 
     def __init__(self):
-        self.dataframe = pandas.read_parquet(reports['FeaturesData']).head(1000)
+        self.dataframe = pandas.read_parquet(reports['FeaturesData'])
         self.x, self.y = split_data(self.dataframe)
         self.x_train, self.x_test, self.y_train, self.y_test = hold_out(self.dataframe)
         self.best_model_name = None  # A variable to store the name of the best model
