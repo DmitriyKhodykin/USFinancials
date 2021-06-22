@@ -44,7 +44,7 @@ class Model:
         print('Best F1 Score:', score)
 
         # Saving model
-        pickle.dump(best_model, open('model.pickle', 'wb'))
+        pickle.dump(best_model, open('pickled/model.pickle', 'wb'))
 
     def train_cv(self) -> dict:
         """
