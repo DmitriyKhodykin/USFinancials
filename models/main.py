@@ -27,6 +27,7 @@ class Model:
         :return: None
         """
         # Selection of the best model
+        print('Best model:', self.best_model_name)
         best_model = params.models_dict[self.best_model_name]
 
         # Set best params for the best model

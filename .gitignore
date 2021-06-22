@@ -162,6 +162,8 @@ features/*.parquet
 features/*.csv
 features/*/*
 
+models/*.pickle
+
 
 # Logs
 logs/
