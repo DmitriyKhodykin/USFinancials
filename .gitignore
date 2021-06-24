@@ -163,7 +163,7 @@ features/*.csv
 features/*/*
 
 models/*/*
-
+models/*.pickle
 
 # Logs
 logs/
