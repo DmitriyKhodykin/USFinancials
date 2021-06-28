@@ -98,3 +98,6 @@ models_params = {
         'l1_ratio': [None]
     }
 }
+
+best_model_name: str = ''
+best_cols_list: list = []

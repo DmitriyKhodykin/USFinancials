@@ -99,6 +99,10 @@ class Model:
             self.dataframe.columns[x] for x in best_features_indexes
         ]
         print(self.best_cols_list)
+
+        with open('models_features.py', 'a') as mf:
+            mf.write(f'best_cols_list = {self.best_cols_list}')
+
         return self.best_cols_list
 
     def review_classification(self) -> str:
