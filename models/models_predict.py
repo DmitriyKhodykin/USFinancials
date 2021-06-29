@@ -4,7 +4,6 @@ How to get live fundamental data from Yahoo Finance:
 http://theautomatic.net/2020/05/05/how-to-download-fundamentals-data-with-python/
 """
 
-import numpy
 import pickle
 from yahoo_fin import stock_info
 
@@ -33,7 +32,7 @@ def predict_stock_class(ticker: str) -> int:
     return predicted_class
 
 
-def get_live_data(ticker: str, yearly=False) -> numpy.ndarray:
+def get_live_data(ticker: str, yearly=False) -> list:
     """
     Obtaining the values of financial indicators required for forecasting.
     :param ticker: yahoo_fin stock name
