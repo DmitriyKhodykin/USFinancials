@@ -21,7 +21,7 @@ class Model:
         self.best_model_name = None  # A variable to store the name of the best model
         self.best_cols_list = []  # List for the best features names
 
-    def save_best_model(self):
+    def create_best_model(self):
         """
         Trains the model for the best features and parameters and serializes it.
         :return: None
@@ -142,4 +142,4 @@ if __name__ == '__main__':
     model = Model()
     model.review_classification()
     model.evaluate_features_importance()
-    model.save_best_model()
+    model.create_best_model()

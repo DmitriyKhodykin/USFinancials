@@ -10,3 +10,4 @@ best_cols_list = [
     'cash', 'totalCurrentLiabilities', 'propertyPlantEquipment', 'longTermDebt',
     'accountsPayable', 'commonStockSharesOutstanding', 'totalCashFromFinancingActivities',
     'totalCashFromOperatingActivities', 'capitalExpenditures']
+best_cols_list = ['incomeBeforeTax', 'netIncome_x', 'sellingGeneralAdministrative', 'ebit', 'operatingIncome', 'interestExpense', 'incomeTaxExpense', 'totalRevenue', 'costOfRevenue', 'netIncomeApplicableToCommonShares', 'totalAssets', 'totalLiab', 'totalStockholderEquity', 'commonStock', 'retainedEarnings', 'otherLiab', 'otherAssets', 'cash', 'propertyPlantEquipment', 'accountsPayable', 'commonStockSharesOutstanding', 'totalCashFromOperatingActivities']
