@@ -1,5 +1,5 @@
 """
-Main module for creating serialized model
+Main module for training and saving model.
 """
 import pickle
 
@@ -15,7 +15,7 @@ from settings.config import reports
 class Model:
 
     def __init__(self):
-        self.dataframe = pandas.read_parquet(reports['FeaturesData'])
+        self.dataframe = pandas.read_parquet(reports['FeaturesData']).head(1000)
         self.x, self.y = split_data(self.dataframe)
         self.x_train, self.x_test, self.y_train, self.y_test = hold_out(self.dataframe)
         self.best_model_name = None  # A variable to store the name of the best model
@@ -42,6 +42,10 @@ class Model:
         y_best_predict = best_model.predict(self.x_test[self.best_cols_list])
         score = f1_score(self.y_test, y_best_predict)
         print('Best F1 Score:', score)
+
+        # Saving scoring result
+        with open(f'{config.LOGS_DIRECTORY}/score.txt', 'a') as log:
+            log.write(f'Best F1 Score: {score}')
 
         # Saving model
         pickle.dump(best_model, open('model.pickle', 'wb'))
