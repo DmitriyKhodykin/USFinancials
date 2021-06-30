@@ -27,9 +27,12 @@ def predict_stock_class(ticker: str) -> int:
         print('error: Pickle unpacking error')
 
     # Predict
-    predicted_class = model.predict([live_data])
-    print(f'Stock: {ticker}, Forecast: {predicted_class}')
-    return predicted_class
+    try:
+        predicted_class = model.predict([live_data])
+        print(f'Stock: {ticker}, Predicted Class: {predicted_class}')
+        return predicted_class
+    except ValueError as error:
+        print('error:', error)
 
 
 def get_live_data(ticker: str, yearly=False) -> list:
@@ -49,12 +52,18 @@ def get_live_data(ticker: str, yearly=False) -> list:
     df = df.append(cash)
 
     # Filtering by best features (col names)
-    df = df.loc[best_cols_list]  # No 'intangibleAssets', 'commonStockSharesOutstanding'
-    vec = list(df.iloc[:, 0].values)
-
-    print('Array for class predict:', vec)
-    return vec
+    try:
+        df = df.loc[best_cols_list]  # No 'intangibleAssets', 'commonStockSharesOutstanding'
+        vec = list(df.iloc[:, 0].values)
+        print('Array for class predict:', vec)
+        return vec
+    except KeyError as error:
+        print('error:', error)
 
 
 if __name__ == '__main__':
-    predict_stock_class("aapl")
+    # predict_stock_class("aapl")
+    # tickers = stock_info.tickers_sp500()
+    # print(tickers)
+    t = ['A', 'AAL', 'AAP', 'AAPL', 'ABBV', 'ABC', 'ABMD', 'ABT', 'ACN', 'ADBE', 'ADI', 'ADM', 'ADP', 'ADSK', 'AEE']
+    get_live_data('ABC')
