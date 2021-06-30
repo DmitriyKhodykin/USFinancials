@@ -15,7 +15,7 @@ from settings.config import reports
 class Model:
 
     def __init__(self):
-        self.dataframe = pandas.read_parquet(reports['FeaturesData'])
+        self.dataframe = pandas.read_parquet(reports['FeaturesData']).head(1000)
         self.x, self.y = split_data(self.dataframe)
         self.x_train, self.x_test, self.y_train, self.y_test = hold_out(self.dataframe)
         self.best_model_name = None  # A variable to store the name of the best model
@@ -45,7 +45,9 @@ class Model:
 
         # Saving scoring result
         with open(f'{config.LOGS_DIRECTORY}/score.txt', 'a') as log:
-            log.write(f'Best F1 Score: {score}')
+            log.write(
+                f'Model: {self.best_model_name}, Best F1 Score: {score}'
+            )
 
         # Saving model
         pickle.dump(best_model, open('model.pickle', 'wb'))
@@ -104,8 +106,8 @@ class Model:
         ]
         print(self.best_cols_list)
 
-        with open('models_features.py', 'a') as mf:
-            mf.write(f'best_cols_list = {self.best_cols_list}')
+        with open('models_features.py', 'w') as mf:
+            mf.write(f'"""Best features (columns) list."""\nbest_cols_list = {self.best_cols_list}')
 
         return self.best_cols_list
 
