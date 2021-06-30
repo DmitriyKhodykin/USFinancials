@@ -1,5 +1,5 @@
 """
-Main module for creating serialized model
+Main module for training and saving model.
 """
 import pickle
 
@@ -15,13 +15,13 @@ from settings.config import reports
 class Model:
 
     def __init__(self):
-        self.dataframe = pandas.read_parquet(reports['FeaturesData']).head(500)
+        self.dataframe = pandas.read_parquet(reports['FeaturesData']).head(1000)
         self.x, self.y = split_data(self.dataframe)
         self.x_train, self.x_test, self.y_train, self.y_test = hold_out(self.dataframe)
         self.best_model_name = None  # A variable to store the name of the best model
         self.best_cols_list = []  # List for the best features names
 
-    def save_best_model(self):
+    def create_best_model(self):
         """
         Trains the model for the best features and parameters and serializes it.
         :return: None
@@ -42,6 +42,12 @@ class Model:
         y_best_predict = best_model.predict(self.x_test[self.best_cols_list])
         score = f1_score(self.y_test, y_best_predict)
         print('Best F1 Score:', score)
+
+        # Saving scoring result
+        with open(f'{config.LOGS_DIRECTORY}/score.txt', 'a') as log:
+            log.write(
+                f'Model: {self.best_model_name}, Best F1 Score: {score}'
+            )
 
         # Saving model
         pickle.dump(best_model, open('model.pickle', 'wb'))
@@ -99,6 +105,10 @@ class Model:
             self.dataframe.columns[x] for x in best_features_indexes
         ]
         print(self.best_cols_list)
+
+        with open('models_features.py', 'w') as mf:
+            mf.write(f'"""Best features (columns) list."""\nbest_cols_list = {self.best_cols_list}')
+
         return self.best_cols_list
 
     def review_classification(self) -> str:
@@ -134,4 +144,4 @@ if __name__ == '__main__':
     model = Model()
     model.review_classification()
     model.evaluate_features_importance()
-    model.save_best_model()
+    model.create_best_model()
