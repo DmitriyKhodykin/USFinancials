@@ -2,6 +2,7 @@
 Main module for training and saving model.
 """
 import pickle
+from datetime import datetime
 
 import pandas
 from sklearn.metrics import f1_score
@@ -46,7 +47,7 @@ class Model:
         # Saving scoring result
         with open(f'{config.LOGS_DIRECTORY}/score.txt', 'a') as log:
             log.write(
-                f'Model: {self.best_model_name}, Best F1 Score: {score}'
+                f'Time: {datetime.now()}, Model: {self.best_model_name}, Test F1 Score: {score} \n'
             )
 
         # Saving model
