@@ -8,7 +8,7 @@ from sklearn.linear_model import LogisticRegression
 
 from settings import config
 
-FEATURES_IMPORTANT_RATE = 3.5
+FEATURES_IMPORTANT_RATE = 2.8
 MAIN_SCORE = 'f1'
 
 models_dict = {
