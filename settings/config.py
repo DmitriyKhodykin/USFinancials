@@ -30,7 +30,7 @@ reports = {
     'SP500': f'{RAW_DATA_DIRECTORY}/Index_500.parquet',
     'Stock': f'{RAW_DATA_DIRECTORY}/Stock_Quotes_Dataframe.parquet',
     'StockRelative': f'{RAW_DATA_DIRECTORY}/Stock_Quotes_Relative.parquet',
-    'RawData': f'{RAW_DATA_DIRECTORY}/data.parquet',
+    'RawData': f'{DATA_DIRECTORY}/data.parquet',
     'CleanData': f'{RAW_DATA_DIRECTORY}/data_clean.parquet',
     'FeaturesData': f'{FEATURES_DATA_DIRECTORY}/data_features.parquet'
 }

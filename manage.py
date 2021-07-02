@@ -3,9 +3,8 @@ Project management module.
 """
 
 from sys import argv
-import subprocess
 
-from settings import config
+from data import data_cleaning as makecleandata
 
 
 def main():
@@ -15,8 +14,7 @@ def main():
     script, command = argv
     print(f'Start with: {script}...')
     if command == 'makecleandata':
-        launcher = subprocess.call(["venv/Scripts/python", f"{config.DATA_DIRECTORY}/data_cleaning.py"])
-        print("Cleaning data...", launcher)
+        makecleandata.main()
 
 
 if __name__ == '__main__':

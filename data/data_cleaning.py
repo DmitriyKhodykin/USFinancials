@@ -108,7 +108,9 @@ class CleaningData:
                 self.dataframe.drop(i, axis=1, inplace=True)
 
     def save_data(self) -> None:
-        self.dataframe.to_parquet('data_clean.parquet')
+        address = f'{config.DATA_DIRECTORY}/data_clean.parquet'
+        print(f'Saving to {address}...')
+        self.dataframe.to_parquet(address)
 
 
 if __name__ == '__main__':
