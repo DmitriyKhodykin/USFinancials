@@ -6,11 +6,13 @@ import os
 
 # Data
 DATA_DIRECTORY = 'data'
-# RAW_DATA_DIRECTORY = os.path.abspath('../data')
 FEATURES_DATA_DIRECTORY = 'features'
 
 # Logs
-LOGS_DIRECTORY = os.path.abspath('../logs')
+LOGS_DIRECTORY = 'logs'
+
+# Models
+MODELS_DIRECTORY = 'models'
 
 # Globals for data pipeline
 TIME_SLICE = 365         # Days from filing date
