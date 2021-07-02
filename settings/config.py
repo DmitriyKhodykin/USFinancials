@@ -5,6 +5,7 @@ Configuration for project setting.
 import os
 
 # Data
+DATA_DIRECTORY = 'data'
 RAW_DATA_DIRECTORY = os.path.abspath('../data')
 FEATURES_DATA_DIRECTORY = os.path.abspath('../features')
 
@@ -38,6 +39,7 @@ reports = {
 
 # Extra columns in main dataframe (delete by data_cleaning module)
 extra_cols = [
+    'commonStockSharesOutstanding',
     'currency_symbol',
     'currency_symbol_x',
     'currency_symbol_y',
