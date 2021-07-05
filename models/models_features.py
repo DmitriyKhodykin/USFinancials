@@ -1,19 +1,23 @@
 """Best features (columns) list."""
+
 best_cols_list = [
-    'incomeBeforeTax',
     'sellingGeneralAdministrative',
-    'operatingIncome',
-    'incomeTaxExpense',
-    'costOfRevenue',
+    'totalRevenue', 'costOfRevenue',
     'totalAssets',
+    'otherCurrentAssets',
     'totalLiab',
     'totalStockholderEquity',
+    'otherCurrentLiab',
     'commonStock',
     'retainedEarnings',
     'otherLiab',
     'otherAssets',
     'cash',
+    'totalCurrentLiabilities',
     'propertyPlantEquipment',
+    'longTermDebt',
     'accountsPayable',
-    'totalCashFromOperatingActivities'
+    'totalCashFromFinancingActivities',
+    'totalCashFromOperatingActivities',
+    'capitalExpenditures'
 ]
