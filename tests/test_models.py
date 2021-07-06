@@ -1,4 +1,4 @@
 """
-Unittests for data flow modules.
+Unittests for models modules.
 """
 from unittest import TestCase
