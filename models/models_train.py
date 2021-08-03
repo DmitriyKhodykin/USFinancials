@@ -2,19 +2,30 @@
 Main module for training and saving model.
 """
 import pickle
+from datetime import datetime
 
 import pandas
 from sklearn.metrics import f1_score
 from sklearn.model_selection import StratifiedShuffleSplit, GridSearchCV
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 
 from services.utils import hold_out, split_data
 from settings import config, params
 from settings.config import reports
 
 
+def main():
+    model = Model()
+    model.review_classification()
+    model.evaluate_features_importance()
+    model.create_best_model()
+
+
 class Model:
 
     def __init__(self):
+        print(f'Loading data from {reports["FeaturesData"]}...')
         self.dataframe = pandas.read_parquet(reports['FeaturesData']).head(1000)
         self.x, self.y = split_data(self.dataframe)
         self.x_train, self.x_test, self.y_train, self.y_test = hold_out(self.dataframe)
@@ -35,7 +46,6 @@ class Model:
 
         # Fitting the best model on the best params
         best_model.set_params(**best_params)
-        # x_best = self.x[self.best_cols_list]
         best_model.fit(self.x_train[self.best_cols_list], self.y_train)
 
         # Scoring model
@@ -46,11 +56,11 @@ class Model:
         # Saving scoring result
         with open(f'{config.LOGS_DIRECTORY}/score.txt', 'a') as log:
             log.write(
-                f'Model: {self.best_model_name}, Best F1 Score: {score}'
+                f'Time: {datetime.now()}, Model: {self.best_model_name}, Test F1 Score: {score} \n'
             )
 
         # Saving model
-        pickle.dump(best_model, open('model.pickle', 'wb'))
+        pickle.dump(best_model, open(f'{config.MODELS_DIRECTORY}/model.pickle', 'wb'))
 
     def train_cv(self) -> dict:
         """
@@ -77,6 +87,7 @@ class Model:
         )
 
         # Fitting
+        print('Fitting best model with beast features on CV...')
         estimator.fit(x_best, self.y)
 
         # Fitting outcomes - vocabulary with lists of characteristics
@@ -93,20 +104,23 @@ class Model:
         best_features_indexes: list = []
 
         best_model = params.models_dict[self.best_model_name]
+        print('Fitting best model for figure out best features...')
         best_model.fit(self.x_train, self.y_train)
         features_importance = best_model.feature_importances_ * 100
 
         # Select the best features
+        print('Cutting out the best features...')
         for index, feature in enumerate(features_importance):
             if feature > params.FEATURES_IMPORTANT_RATE:
                 best_features_indexes.append(index)
 
+        print('Saving best features names in list...')
         self.best_cols_list = [
             self.dataframe.columns[x] for x in best_features_indexes
         ]
         print(self.best_cols_list)
 
-        with open('models_features.py', 'w') as mf:
+        with open(f'{config.MODELS_DIRECTORY}/models_features.py', 'w') as mf:
             mf.write(f'"""Best features (columns) list."""\nbest_cols_list = {self.best_cols_list}')
 
         return self.best_cols_list
@@ -121,6 +135,7 @@ class Model:
 
         results = pandas.DataFrame(columns=['Name', 'F1Score'])
 
+        print('Reviewing models in loop on default params...')
         for name, model_ in models.items():
             model_.fit(self.x_train, self.y_train)
             y_predict = model_.predict(self.x_test)
@@ -136,12 +151,10 @@ class Model:
             ascending=False
         )
         print(sorted_results)
+        print('Saving best model name...')
         self.best_model_name = sorted_results.head(1)['Name'].values[0]
         return self.best_model_name
 
 
 if __name__ == '__main__':
-    model = Model()
-    model.review_classification()
-    model.evaluate_features_importance()
-    model.create_best_model()
+    main()

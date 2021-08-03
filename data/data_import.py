@@ -9,6 +9,12 @@ import yahoo_fin.stock_info as si
 from services.utils import timeit
 
 
+def main():
+    get_unique_tickers_list()
+    import_stock_quotes()
+    import_index_500()
+
+
 @timeit
 def import_index_500(ticker='^GSPC') -> None:
     """
@@ -86,6 +92,4 @@ def not_null_tickers_checker(report: pd.DataFrame) -> list:
 
 
 if __name__ == '__main__':
-    get_unique_tickers_list()
-    import_stock_quotes()
-    import_index_500()
+    main()

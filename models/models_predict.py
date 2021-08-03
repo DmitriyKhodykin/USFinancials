@@ -8,6 +8,13 @@ import pickle
 from yahoo_fin import stock_info
 
 from models.models_features import best_cols_list
+from settings import config
+
+
+def main():
+    tickers = stock_info.tickers_sp500()
+    for ticker in tickers:
+        predict_stock_class(ticker)
 
 
 def predict_stock_class(ticker: str) -> int:
@@ -19,14 +26,14 @@ def predict_stock_class(ticker: str) -> int:
     # Get data from YF
     live_data = get_live_data(ticker)
 
-    # Load serialized model
+    print('Loading serialized model...')
     try:
-        with open('model.pickle', 'rb') as file:
+        with open(f'{config.MODELS_DIRECTORY}/model.pickle', 'rb') as file:
             model = pickle.load(file)
     except pickle.UnpicklingError:
         print('error: Pickle unpacking error')
 
-    # Predict
+    print('Predicting:')
     try:
         predicted_class = model.predict([live_data])
         print(f'Stock: {ticker}, Predicted Class: {predicted_class}')
@@ -43,17 +50,18 @@ def get_live_data(ticker: str, yearly=False) -> list:
     :return: an array with values of important features for the forecast
     """
     # Live data from Yahoo Finance
+    print('Loading data from source...')
     balance = stock_info.get_balance_sheet(ticker, yearly=yearly)
     income = stock_info.get_income_statement(ticker, yearly=yearly)
     cash = stock_info.get_cash_flow(ticker, yearly=yearly)
 
-    # Merging dataframes
+    print('Merging dataframes...')
     df = balance.append(income)
     df = df.append(cash)
 
-    # Filtering by best features (col names)
+    print('Filtering dataframe by best features (col names)...')
     try:
-        df = df.loc[best_cols_list]  # No 'intangibleAssets', 'commonStockSharesOutstanding'
+        df = df.loc[best_cols_list]
         vec = list(df.iloc[:, 0].values)
         return vec
     except KeyError as error:
@@ -61,6 +69,4 @@ def get_live_data(ticker: str, yearly=False) -> list:
 
 
 if __name__ == '__main__':
-    tickers = stock_info.tickers_sp500()
-    for ticker in tickers:
-        predict_stock_class(ticker)
+    main()

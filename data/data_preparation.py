@@ -9,6 +9,13 @@ import pandas as pd
 from services.utils import timeit
 
 
+def main():
+    unpack_data()
+    links_dataset = pd.read_parquet('links.parquet')
+    for branch_item in ['Balance_Sheet', 'Cash_Flow', 'Income_Statement']:
+        create_financial_datasets(links_dataset, branch_item)
+
+
 @timeit
 def unpack_data(data_dir='US_Financials') -> None:
     """
@@ -61,7 +68,4 @@ def create_financial_datasets(links: pd.DataFrame, branch: str) -> None:
 
 
 if __name__ == '__main__':
-    unpack_data()
-    links_dataset = pd.read_parquet('links.parquet')
-    for branch_item in ['Balance_Sheet', 'Cash_Flow', 'Income_Statement']:
-        create_financial_datasets(links_dataset, branch_item)
+    main()

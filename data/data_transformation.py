@@ -11,6 +11,12 @@ from settings.config import reports
 from data_cleaning import CleaningData
 
 
+def main():
+    percentage_change('SP500', 'Stock')
+    joining_reports()
+    create_target('StockRelative', 'RawData')
+
+
 @timeit
 def create_target(stock: str, data: str) -> None:
     """
@@ -151,6 +157,4 @@ def max_filing_date(row: pd.Series) -> pd.Timestamp:
 
 
 if __name__ == '__main__':
-    percentage_change('SP500', 'Stock')
-    joining_reports()
-    create_target('StockRelative', 'RawData')
+    main()
