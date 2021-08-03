@@ -7,6 +7,8 @@ from datetime import datetime
 import pandas
 from sklearn.metrics import f1_score
 from sklearn.model_selection import StratifiedShuffleSplit, GridSearchCV
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 
 from services.utils import hold_out, split_data
 from settings import config, params
@@ -24,7 +26,7 @@ class Model:
 
     def __init__(self):
         print(f'Loading data from {reports["FeaturesData"]}...')
-        self.dataframe = pandas.read_parquet(reports['FeaturesData'])
+        self.dataframe = pandas.read_parquet(reports['FeaturesData']).head(1000)
         self.x, self.y = split_data(self.dataframe)
         self.x_train, self.x_test, self.y_train, self.y_test = hold_out(self.dataframe)
         self.best_model_name = None  # A variable to store the name of the best model
@@ -44,7 +46,6 @@ class Model:
 
         # Fitting the best model on the best params
         best_model.set_params(**best_params)
-        # x_best = self.x[self.best_cols_list]
         best_model.fit(self.x_train[self.best_cols_list], self.y_train)
 
         # Scoring model
